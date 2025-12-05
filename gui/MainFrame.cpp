@@ -3,6 +3,7 @@
 #include "wx/button.h"
 #include "wx/stattext.h"
 #include "wx/choice.h"
+#include <iostream>
 
 #include "DashboardPanel.h" 
 #include "ConfigPanel.h"
@@ -12,7 +13,29 @@ MainFrame::MainFrame(const wxString& title, const wxPoint& pos, const wxSize& si
        : wxFrame(NULL, wxID_ANY, title, pos, size)
 {
     // 1. 设置主窗口背景为深色
-    SetBackgroundColour(BG_DARK);
+    // SetBackgroundColour(BG_DARK);
+
+    // 在 Linux GNOME 下，显式设置常用字体，确保内容可见
+    wxFont defaultFont(12, wxFONTFAMILY_SWISS, wxFONTSTYLE_NORMAL, wxFONTWEIGHT_NORMAL, false, "DejaVu Sans");
+    if (!defaultFont.IsOk()) {
+        // 备选字体
+        defaultFont = wxFont(12, wxFONTFAMILY_SWISS, wxFONTSTYLE_NORMAL, wxFONTWEIGHT_NORMAL, false, "Liberation Sans");
+    }
+    SetFont(defaultFont);
+    std::cout << "Default font set: " << defaultFont.GetFaceName().ToStdString() << std::endl;
+
+    // 递归设置所有子控件字体
+    std::function<void(wxWindow*, const wxFont&)> SetFontRecursive = [&](wxWindow* win, const wxFont& font) {
+        if (win) win->SetFont(font);
+        const wxWindowList& children = win->GetChildren();
+        for (wxWindowList::const_iterator it = children.begin(); it != children.end(); ++it) {
+            wxWindow* childWin = dynamic_cast<wxWindow*>(*it);
+            if (childWin) {
+                SetFontRecursive(childWin, font);
+            }
+        }
+    };
+    SetFontRecursive(this, defaultFont);
 
     // 2. 创建主 Sizer (垂直布局)
     wxBoxSizer* mainSizer = new wxBoxSizer(wxVERTICAL);
@@ -30,13 +53,15 @@ MainFrame::MainFrame(const wxString& title, const wxPoint& pos, const wxSize& si
 
     // 6. 应用 Sizer
     SetSizer(mainSizer);
-    Center(); // 窗口居中
+    // Center(); // 窗口居中
 }
 
 void MainFrame::InitTopBar(wxSizer* parentSizer)
 {
     wxPanel* topBar = new wxPanel(this, wxID_ANY);
-    topBar->SetBackgroundColour(BG_MID);
+    topBar->SetBackgroundColour(TEXT_LIGHT);
+    // 继承主窗口字体，确保字体可见
+    topBar->SetFont(GetFont());
     wxBoxSizer* topSizer = new wxBoxSizer(wxHORIZONTAL);
 
     // --- 左侧：下拉框 ---
@@ -51,15 +76,18 @@ void MainFrame::InitTopBar(wxSizer* parentSizer)
     auto CreateStatusLabel = [&](const wxString& text) {
         wxStaticText* label = new wxStaticText(topBar, wxID_ANY, text);
         label->SetForegroundColour(TEXT_LIGHT);
+        label->SetFont(GetFont());
         return label;
     };
 
     topSizer->AddStretchSpacer(1); // 弹性空间
 
-    topSizer->Add(CreateStatusLabel("发送: 0Hz"), 0, wxALL | wxALIGN_CENTER_VERTICAL, 5);
-    topSizer->Add(CreateStatusLabel("接收: 0Hz"), 0, wxALL | wxALIGN_CENTER_VERTICAL, 5);
-    topSizer->Add(CreateStatusLabel("丢包: 0.0%"), 0, wxALL | wxALIGN_CENTER_VERTICAL, 5);
-    topSizer->Add(CreateStatusLabel("错误: 0Hz"), 0, wxALL | wxALIGN_CENTER_VERTICAL, 5);
+    wxString recive("接收: 0Hz");
+
+    topSizer->Add(CreateStatusLabel(recive), 0, wxALL | wxALIGN_CENTER_VERTICAL, 5);
+    topSizer->Add(CreateStatusLabel(recive), 0, wxALL | wxALIGN_CENTER_VERTICAL, 5);
+    topSizer->Add(CreateStatusLabel(recive), 0, wxALL | wxALIGN_CENTER_VERTICAL, 5);
+    topSizer->Add(CreateStatusLabel(recive), 0, wxALL | wxALIGN_CENTER_VERTICAL, 5);
     
     topSizer->AddStretchSpacer(1); // 弹性空间
 
