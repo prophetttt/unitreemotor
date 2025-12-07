@@ -19,7 +19,7 @@ bool MyApp::OnInit()
 {
     // 1. 创建主窗口实例
     MainFrame* frame = new MainFrame(
-        "Unitree 电机调试助手 (Demo)",
+        wxString::FromUTF8("Unitree 电机调试助手 (Demo)"),
         wxPoint(50, 50),
         wxSize(800, 700)
     );

@@ -30,3 +30,11 @@ add_executable(${PROJECT_NAME} WIN32 MACOSX_BUNDLE ${SOURCE_FILES})
 
 # 7. 链接 wxWidgets 库
 target_link_libraries(${PROJECT_NAME} ${wxWidgets_LIBRARIES})
+
+target_compile_options(${PROJECT_NAME} PRIVATE
+    # 指定源文件（输入）编码为 UTF-8
+    -finput-charset=UTF-8
+    
+    # 指定字符串字面量（执行）编码为 UTF-8
+    -fexec-charset=UTF-8
+)

@@ -28,7 +28,7 @@ void DashboardPanel::InitDataParsing(wxSizer* parentSizer)
     wxBoxSizer* panelSizer = new wxBoxSizer(wxVERTICAL);
 
     // 标题
-    wxStaticText* title = new wxStaticText(panel, wxID_ANY, "● 数据解析");
+    wxStaticText* title = new wxStaticText(panel, wxID_ANY, wxString::FromUTF8("● 数据解析"));
     title->SetForegroundColour(TEXT_LIGHT);
     title->SetFont(title->GetFont().Bold());
     panelSizer->Add(title, 0, wxALL, 10);
@@ -45,14 +45,14 @@ void DashboardPanel::InitDataParsing(wxSizer* parentSizer)
         gridSizer->Add(value, 0, wxALIGN_LEFT | wxALIGN_CENTER_VERTICAL);
     };
 
-    AddReadOnlyField("电机ID:", "0");
-    AddReadOnlyField("转子位置:", "0.00");
-    AddReadOnlyField("电机模式:", "0");
-    AddReadOnlyField("电机温度:", "正常");
-    AddReadOnlyField("转子扭矩:", "0.00");
-    AddReadOnlyField("错误状态:", "正常");
-    AddReadOnlyField("转子速度:", "0.00");
-    AddReadOnlyField("传感器:", "0");
+    AddReadOnlyField(wxString::FromUTF8("电机ID:"), wxString::FromUTF8("0"));
+    AddReadOnlyField(wxString::FromUTF8("转子位置:"), wxString::FromUTF8("0.00"));
+    AddReadOnlyField(wxString::FromUTF8("电机模式:"), wxString::FromUTF8("0"));
+    AddReadOnlyField(wxString::FromUTF8("电机温度:"), wxString::FromUTF8("正常"));
+    AddReadOnlyField(wxString::FromUTF8("转子扭矩:"), wxString::FromUTF8("0.00"));
+    AddReadOnlyField(wxString::FromUTF8("错误状态:"), wxString::FromUTF8("正常"));
+    AddReadOnlyField(wxString::FromUTF8("转子速度:"), wxString::FromUTF8("0.00"));
+    AddReadOnlyField(wxString::FromUTF8("传感器:"), wxString::FromUTF8("0"));
 
     panelSizer->Add(gridSizer, 1, wxEXPAND | wxALL, 10);
     panel->SetSizerAndFit(panelSizer);
@@ -69,7 +69,7 @@ void DashboardPanel::InitDebugInput(wxSizer* parentSizer)
     wxBoxSizer* panelSizer = new wxBoxSizer(wxVERTICAL);
 
     // 标题
-    wxStaticText* title = new wxStaticText(panel, wxID_ANY, "● 调试数据输入");
+    wxStaticText* title = new wxStaticText(panel, wxID_ANY, wxString::FromUTF8("● 调试数据输入"));
     title->SetForegroundColour(TEXT_LIGHT);
     title->SetFont(title->GetFont().Bold());
     panelSizer->Add(title, 0, wxALL, 10);
@@ -90,14 +90,14 @@ void DashboardPanel::InitDebugInput(wxSizer* parentSizer)
         gridSizer->Add(input, 0, wxALIGN_LEFT | wxALIGN_CENTER_VERTICAL);
     };
     
-    AddInputField("电机ID(0-15):", "0");
-    AddInputField("转子位置(rad):", "0");
-    AddInputField("电机模式:", "0");
-    AddInputField("位置kp:", "0");
-    AddInputField("转子扭矩(Nm):", "0");
-    AddInputField("速度kd:", "0");
-    AddInputField("转子速度(rad/s):", "0");
-    AddInputField("通信频率(Hz):", "1000");
+    AddInputField(wxString::FromUTF8("电机ID(0-15):"), wxString::FromUTF8("0"));
+    AddInputField(wxString::FromUTF8("转子位置(rad):"), wxString::FromUTF8("0"));
+    AddInputField(wxString::FromUTF8("电机模式:"), wxString::FromUTF8("0"));
+    AddInputField(wxString::FromUTF8("位置kp:"), wxString::FromUTF8("0"));
+    AddInputField(wxString::FromUTF8("转子扭矩(Nm):"), wxString::FromUTF8("0"));
+    AddInputField(wxString::FromUTF8("速度kd:"), wxString::FromUTF8("0"));
+    AddInputField(wxString::FromUTF8("转子速度(rad/s):"), wxString::FromUTF8("0"));
+    AddInputField(wxString::FromUTF8("通信频率(Hz):"), wxString::FromUTF8("1000"));
 
     panelSizer->Add(gridSizer, 1, wxEXPAND | wxALL, 10);
     panel->SetSizerAndFit(panelSizer);

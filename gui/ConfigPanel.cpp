@@ -14,7 +14,7 @@ ConfigPanel::ConfigPanel(wxWindow* parent)
     wxBoxSizer* mainSizer = new wxBoxSizer(wxVERTICAL);
 
     // 标题
-    wxStaticText* title = new wxStaticText(this, wxID_ANY, "● 配置工具");
+    wxStaticText* title = new wxStaticText(this, wxID_ANY, wxString::FromUTF8("● 配置工具"));
     title->SetForegroundColour(TEXT_LIGHT);
     title->SetFont(title->GetFont().Bold());
     mainSizer->Add(title, 0, wxALL, 10);
@@ -32,22 +32,22 @@ ConfigPanel::ConfigPanel(wxWindow* parent)
     };
     
     // 第1行: 查询/修改/输入
-    buttonSizer->Add(CreateConfigButton("查询ID"), 0, wxEXPAND);
-    buttonSizer->Add(CreateConfigButton("修改ID"), 0, wxEXPAND);
-    buttonSizer->Add(new wxTextCtrl(buttonPanel, wxID_ANY, "0", wxDefaultPosition, wxSize(60, -1)), 0, wxEXPAND);
-    buttonSizer->Add(CreateConfigButton("恢复电机模式"), 0, wxEXPAND);
-    buttonSizer->Add(CreateConfigButton("查询版本号"), 0, wxEXPAND);
+    buttonSizer->Add(CreateConfigButton(wxString::FromUTF8("查询ID")), 0, wxEXPAND);
+    buttonSizer->Add(CreateConfigButton(wxString::FromUTF8("修改ID")), 0, wxEXPAND);
+    buttonSizer->Add(new wxTextCtrl(buttonPanel, wxID_ANY, wxString::FromUTF8("0"), wxDefaultPosition, wxSize(60, -1)), 0, wxEXPAND);
+    buttonSizer->Add(CreateConfigButton(wxString::FromUTF8("恢复电机模式")), 0, wxEXPAND);
+    buttonSizer->Add(CreateConfigButton(wxString::FromUTF8("查询版本号")), 0, wxEXPAND);
 
     // 第2行: 自动引导/固件更新
-    buttonSizer->Add(CreateConfigButton("开启自动引导"), 0, wxEXPAND);
-    buttonSizer->Add(CreateConfigButton("关闭自动引导"), 0, wxEXPAND);
-    buttonSizer->Add(new wxStaticText(buttonPanel, wxID_ANY, ""), 0, wxEXPAND); // 占位
-    buttonSizer->Add(CreateConfigButton("临时自动引导"), 0, wxEXPAND);
-    buttonSizer->Add(CreateConfigButton("退出自动引导"), 0, wxEXPAND);
+    buttonSizer->Add(CreateConfigButton(wxString::FromUTF8("开启自动引导")), 0, wxEXPAND);
+    buttonSizer->Add(CreateConfigButton(wxString::FromUTF8("关闭自动引导")), 0, wxEXPAND);
+    buttonSizer->Add(new wxStaticText(buttonPanel, wxID_ANY, wxString::FromUTF8("")), 0, wxEXPAND); // 占位
+    buttonSizer->Add(CreateConfigButton(wxString::FromUTF8("临时自动引导")), 0, wxEXPAND);
+    buttonSizer->Add(CreateConfigButton(wxString::FromUTF8("退出自动引导")), 0, wxEXPAND);
     
     // 第3行: 更新固件
-    buttonSizer->Add(CreateConfigButton("点击上传"), 0, wxEXPAND);
-    buttonSizer->Add(CreateConfigButton("更新固件"), 0, wxEXPAND);
+    buttonSizer->Add(CreateConfigButton(wxString::FromUTF8("点击上传")), 0, wxEXPAND);
+    buttonSizer->Add(CreateConfigButton(wxString::FromUTF8("更新固件")), 0, wxEXPAND);
 
     buttonPanel->SetSizerAndFit(buttonSizer);
 
