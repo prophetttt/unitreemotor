@@ -6,14 +6,10 @@
 #include <wx/app.h>        // wxTheApp
 #include <wx/window.h>     // 窗口相关
 
-CoreThread::CoreThread(std::string serial):serial_port(serial),core_thread(&CoreThread::serialReadandSend)
+CoreThread::CoreThread(std::string seria, std::function callback):serial_port(serial),core_thread(&CoreThread::serialReadandSend),callbackaction(callback)
 {
     
 }
-{
-    
-}
-
 
 
 //running in separate thread
@@ -23,6 +19,7 @@ void CoreThread::serialReadandSend(){
         {
             std::shared_lock read_lock(rw_mutex_);
             serial.sendRecv(&motor_cmd,&motor_data);
+            //callback
         }
         // wxQueueEvent(wxTheApp->GetTopWindow()->GetEventHandler(),
         //              new wxCommandEvent(wxEVT_COMMAND_MENU_SELECTED, wxID_ANY));

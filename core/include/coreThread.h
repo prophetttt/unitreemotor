@@ -1,20 +1,22 @@
 #ifndef CORETHREAD
 #define CORETHREAD
 #include <string>
-#include <../platform/linux/include/unitreeMotor/unitreeMotor.h>
+#include "../platform/linux/include/unitreeMotor/unitreeMotor.h"
+#include <functional>
+#include <thread>
 
 #define RUN_IN_THREAD
 
 class CoreThread
 {
 public:
-    CoreThread(std::string serial);
+    CoreThread(std::string serial, std::function<void()> callback = nullptr);
     ~CoreThread();
     
     bool changeMotorCmd(const motor_cmd&);
     bool getMotorData(motor_data&);
 
-
+    std::function<void(MotorCmd&, MotorData&)> callbackaction = nullptr;
 
 
 private:
@@ -24,7 +26,8 @@ private:
     MotorCmd motor_cmd;
     MotorData motor_data;
     unsigned int seq = 0;
-    mutable std::shared_mutex rw_mutex_;
+    mutable std::mutex read_mutex_;
+    mutable std::mutex write_mutex_;
     std::thread core_thread;
     bool thread_alive = true;
 };
