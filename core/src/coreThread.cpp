@@ -26,7 +26,7 @@ void CoreThread::serialReadandSend(){
         }
         // wxQueueEvent(wxTheApp->GetTopWindow()->GetEventHandler(),
         //              new wxCommandEvent(wxEVT_COMMAND_MENU_SELECTED, wxID_ANY));
-        std::this_thread::sleep_for(std::chrono::milliseconds(10));
+        
     }
 }
 

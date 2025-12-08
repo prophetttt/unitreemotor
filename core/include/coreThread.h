@@ -26,6 +26,7 @@ private:
     unsigned int seq = 0;
     mutable std::shared_mutex rw_mutex_;
     std::thread core_thread;
+    bool thread_alive = true;
 };
 
 
