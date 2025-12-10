@@ -1,7 +1,6 @@
 #ifndef CORETHREAD
 #define CORETHREAD
 #include <string>
-#include "../platform/linux/include/unitreeMotor/unitreeMotor.h"
 #include <functional>
 #include <thread>
 
