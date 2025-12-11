@@ -1,36 +1,48 @@
 #ifndef UNITREEMOTORGOM_H
 #define UNITREEMOTORGOM_H
 
-//motortype for compatible
+#ifdef __cplusplus
+extern "C" {
+#endif
+#include <stdbool.h>
+#include <stddef.h>
 
+#include <stdint.h>
 
-bool crc_verify(MotorCmdGom *);
-
-bool initMotoCmdGom(const unsigned short *id, const unsigned short *mode, const float* T,const float* W,const float* Pos,const float* K_P,const float* K_W);
-bool depackMotoDataGom(unsigned short*id, unsigned short *mode,  float* T, float* W, float* Pos, float* K_P, float* K_W);
-
-
-struct MotorCmdGom{
+#pragma pack(push, 1)
+struct MotorCmdGom
+{
     uint16_t head;
-    uint8_t  mod;
-    uint16_t T;
-    uint16_t W;
+    uint8_t mod;
+    uint16_t t;
+    uint16_t w;
     uint32_t pos;
     uint16_t kp;
     uint16_t kd;
     uint16_t crc16;
-}
+};
 
-struct MotorDataGom{
+struct MotorDataGom
+{
     uint16_t head;
     uint8_t mod;
-    uint16_t T;
-    uint16_t W;
+    uint16_t t;
+    uint16_t w;
     uint32_t pos;
     uint8_t temp;
     uint16_t reserve;
     uint16_t crc16;
-}
+};
+#pragma pack(pop) 
 
+bool generate_crc16_cmd(struct MotorCmdGom *cmd);
+bool verify_crc16_data(struct MotorDataGom *data);
+bool initMotoCmdGom(struct MotorCmdGom * cmd,const unsigned short *ID, const unsigned short *MODE, const float* T,const float* W,const float* POS,const float* K_P,const float* K_W);
+bool depackMotoDataGom(const struct MotorDataGom *, unsigned short*ID, unsigned short *MODE,  float* T, float* W, float* POS, int* TEMP, int ERROR, int FOOFORCE);
+static uint16_t crc_ccitt_byte(uint16_t crc, const uint8_t c);
+inline uint16_t crc_ccitt(uint16_t crc, uint8_t const *buffer, size_t len);
+#ifdef __cplusplus
+}
+#endif
 
 #endif

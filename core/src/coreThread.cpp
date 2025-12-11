@@ -1,34 +1,23 @@
-#include"../include/coreThread.h"
-#include <thread>
-#include "../platform/linux/include/serialPort/SerialPort.h"
-#include <wx/event.h>      // 核心事件系统
-#include <wx/evtloop.h>    // 事件循环相关
-#include <wx/app.h>        // wxTheApp
-#include <wx/window.h>     // 窗口相关
+#include "unitreeMotor.h"
+#include "coreThread.h"
 
-CoreThread::CoreThread(std::string seria, std::function callback):serial_port(serial),core_thread(&CoreThread::serialReadandSend),callbackaction(callback)
+
+CoreThread<MotorCmdGom, MotorDataGom>::CoreThread(unsigned short freq, std::function<bool(MotorCmdGom&, MotorDataGom&)> callback, unsigned short motor_count)
 {
-    
+    this->fequency = freq;
+    this->cmd_callback = callback;
+    this->motor_count = motor_count;
+    serial_thread = std::thread(&CoreThread<MotorCmdGom, MotorDataGom>::serialsendrecive, this);
 }
 
+void CoreThread<MotorCmdGom, MotorDataGom>::serial_thread(){
+    while(thread_active){
+        auto start = std::chrono::system_clock::now();
 
-//running in separate thread
-void CoreThread::serialReadandSend(){
-    SerialPort serial(serial_port);
-    while(thread_alive){
-        {
-            std::shared_lock read_lock(rw_mutex_);
-            serial.sendRecv(&motor_cmd,&motor_data);
-            //callback
-        }
-        // wxQueueEvent(wxTheApp->GetTopWindow()->GetEventHandler(),
-        //              new wxCommandEvent(wxEVT_COMMAND_MENU_SELECTED, wxID_ANY));
-        
-    }
-}
+        //send and receive logic here
 
-CoreThread::~CoreThread(){
-    if(core_thread.joinable()){
-        core_thread.join();
+        auto end = std::chrono::system_clock::now();
+        std::chrono::duration<double> elapsed_seconds = end-start;
+        std::this_thread::sleep_for(std::chrono::milliseconds((int)(1000.0/fequency) - (int)(elapsed_seconds.count()*1000)));
     }
 }

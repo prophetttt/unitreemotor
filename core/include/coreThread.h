@@ -1,34 +1,39 @@
 #ifndef CORETHREAD
 #define CORETHREAD
+
 #include <string>
 #include <functional>
 #include <thread>
 #include <queue>
+#include <unordered_map>
+#include <mutex>
+#include <chrono>
+
 #define RUN_IN_THREAD
 
-//motorControl thread abstraction
-template<typename T>
+// motorControl thread abstraction
+template <typename T, typename R>
 class CoreThread
 {
-private:
-    //store thread instance
-    static CoreThread * coreThreadNum[100];
-    T motordata;
-    CoreThread(unsigned int id);
-    std::queue<T> buffer;
-    std::mutex mtx;
-    std::condition_variable cv_consumer;
-    std::condition_variable cv_producter;
-    RUN_IN_THREAD void run();
+    //send/recive fequency in Hz
+    unsigned short fequency;
+    //map of command ID's
 
-public:
-CoreThread(const CoreThread&) = delete;
-CoreThread& operator=(const CoreThread&) = delete;
-CoreThread(CoreThread&&) = delete;
-CoreThread& operator=(CoreThread&&) = delete;
-static std::unique_ptr<CoreThread> create (const unsigned int& id);
+    bool cmd_id_map[15];
+    //how many motors are being controlled
+    unsigned short motor_count;
+    std::mutex cmd_mutex;
+    std::queue<std::pair<std::pair<T, R>, std::chrono::system_clock> cmd_queue;
+    std::function<bool(T&, R&)> cmd_callback;
 
-
-
-}
+    RUN_IN_THREAD void serialsendrecive();
+    bool thread_active = true;
+    std::thread serial_thread;
+    CoreThread() {}
+    ~CoreThread()
+    {
+        thread_active = false;
+        serial_thread.join();
+    }
+};
 #endif
