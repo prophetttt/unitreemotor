@@ -28,6 +28,7 @@ public:
     std::mutex cmd_mutex;
     bool cmd_id_map[15] = {false};
     T current_cmd[15];
+
     // how many motors are being controlled
     std::atomic<unsigned short> motor_count = 0;
     std::mutex queue_mutex;
@@ -41,7 +42,9 @@ public:
     CoreThread(std::string serial_port, unsigned short freq, std::function<bool(T &, R &)> callback, std::unordered_map<int, MotorCmdGom> initial_cmds);
     ~CoreThread();
     bool setCmd(unsigned short id, T cmd);
-    std::pair<std::pair<T, R>, std::chrono::time_point<std::chrono::system_clock>> getCmd();
+
+    bool getCmd(
+        std::pair<std::pair<T, R>, std::chrono::time_point<std::chrono::system_clock>> &result);
     std::thread serial_thread;
 };
 #endif

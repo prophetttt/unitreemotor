@@ -88,11 +88,11 @@ bool initMotoCmdGom(struct MotorCmdGom * cmd,const unsigned short *ID, const uns
     cmd->head = 0xEEFE; 
     cmd->mod = ((*MODE & 0x0F) << 5) | (*ID & 0x0F);
     float t_val = (*T) * 256;
-    cmd->t = (uint16_t)(t_val);
+    cmd->t = (int16_t)(t_val);
     float w_val = (*W)/(2*PI) * 256;
-    cmd->w = (uint16_t)(w_val);
+    cmd->w = (int16_t)(w_val);
     float pos_val = (*POS)/(2*PI) * 32768;
-    cmd->pos = (uint32_t)(pos_val);
+    cmd->pos = (int32_t)(pos_val);
     float kp_val = (*K_P) * 1280;
     cmd->kp = (uint16_t)(kp_val);
     float kw_val = (*K_W) * 1280;
@@ -113,9 +113,9 @@ bool depackMotoDataGom(const struct MotorDataGom *data,unsigned short*ID, unsign
 	}
 	*MODE = (data->mod >> 4) & 0x0F;
 	*ID = (data->mod >> 1) & 0x07;
-	*T = ((float)(data->t)) / 256.0f;
-	*W = (((float)(data->w)) / 256.0f) * 2*PI;
-	*POS = (((float)(data->pos)) / 32768.0f) * 2*PI;
+	*T = ((data->t)) / 256.0f;
+	*W = (((data->w)) / 256.0f) * 2*PI;
+	*POS = (((data->pos)) / 32768.0f) * 2*PI;
 	*TEMP = (int)(data->temp);
 	*ERROR = (int)(data->reserve >> 13) & 0x07;
 	*FOOFORCE = (int)(data->reserve >> 1) & 0xFFF;

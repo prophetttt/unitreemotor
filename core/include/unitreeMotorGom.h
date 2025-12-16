@@ -14,9 +14,9 @@ struct MotorCmdGom
 {
     uint16_t head;
     uint8_t mod;
-    uint16_t t;
-    uint16_t w;
-    uint32_t pos;
+    int16_t t;
+    int16_t w;
+    int32_t pos;
     uint16_t kp;
     uint16_t kd;
     uint16_t crc16;
@@ -26,9 +26,9 @@ struct MotorDataGom
 {
     uint16_t head;
     uint8_t mod;
-    uint16_t t;
-    uint16_t w;
-    uint32_t pos;
+    int16_t t;
+    int16_t w;
+    int32_t pos;
     uint8_t temp;
     uint16_t reserve;
     uint16_t crc16;
