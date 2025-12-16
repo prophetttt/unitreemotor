@@ -1,7 +1,11 @@
 #include "unitreeMotorGom.h"
 #define PI  3.14159265358979323846f
 
-uint16_t const crc_ccitt_table[256] = {
+
+#define CRC16_CCITT_POLY 0x1021
+#define CRC16_CCITT_INIT 0x0000
+
+static uint16_t crc16_ccitt_table[256] = {
 	0x0000, 0x1189, 0x2312, 0x329b, 0x4624, 0x57ad, 0x6536, 0x74bf,
 	0x8c48, 0x9dc1, 0xaf5a, 0xbed3, 0xca6c, 0xdbe5, 0xe97e, 0xf8f7,
 	0x1081, 0x0108, 0x3393, 0x221a, 0x56a5, 0x472c, 0x75b7, 0x643e,
@@ -36,10 +40,9 @@ uint16_t const crc_ccitt_table[256] = {
 	0x7bc7, 0x6a4e, 0x58d5, 0x495c, 0x3de3, 0x2c6a, 0x1ef1, 0x0f78
 };
 
-
 static uint16_t crc_ccitt_byte(uint16_t crc, const uint8_t c)
 {
-	return (crc >> 8) ^ crc_ccitt_table[(crc ^ c) & 0xff];
+	return (crc >> 8) ^ crc16_ccitt_table[(crc ^ c) & 0xff];
 }
 
 /**
@@ -56,6 +59,21 @@ uint16_t crc_ccitt(uint16_t crc, uint8_t const *buffer, size_t len)
 	return crc;
 }
 
+
+bool generate_crc16_cmd(struct MotorCmdGom *cmd){
+    // 生成MotorCmdGom结构体的CRC16校验码
+    uint16_t crc = CRC16_CCITT_INIT;
+    crc = crc_ccitt(crc, (uint8_t*)cmd, sizeof(struct MotorCmdGom) - sizeof(uint16_t));
+    cmd->crc16 = crc;
+    return true; // 返回生成是否成功
+}
+
+bool verify_crc16_data(struct MotorDataGom *data){
+	// 验证MotorDataGom结构体的CRC16校验码
+	uint16_t crc = CRC16_CCITT_INIT;
+	crc = crc_ccitt(crc, (uint8_t*)data, sizeof(struct MotorDataGom) - sizeof(uint16_t));
+	return (crc == data->crc16); // 返回验证结果
+}
 
 bool initMotoCmdGom(struct MotorCmdGom * cmd,const unsigned short *ID, const unsigned short *MODE, const float* T,const float* W,const float* POS,const float* K_P,const float* K_W){
     // 初始化MotorCmdGom结构体
@@ -83,19 +101,26 @@ bool initMotoCmdGom(struct MotorCmdGom * cmd,const unsigned short *ID, const uns
 }
 
 
-bool depackMotoDataGom(const struct MotorDataGom *data,unsigned short*ID, unsigned short *MODE,  float* T, float* W, float* POS, int* TEMP, int ERROR, int FOOFORCE){
+
+bool depackMotoDataGom(const struct MotorDataGom *data,unsigned short*ID, unsigned short *MODE,  float* T, float* W, float* POS, int* TEMP, int *ERROR, int* FOOFORCE){
     // 解包MotorDataGom结构体
     // 具体实现根据协议进行数据转换和赋值
+	if(!verify_crc16_data((struct MotorDataGom *)data)){
+		return false; // CRC校验失败，返回解包失败
+	}
+	if(data->head != 0xEEFD){
+		return false; // 数据头错误，返回解包失败
+	}
+	*MODE = (data->mod >> 4) & 0x0F;
+	*ID = (data->mod >> 1) & 0x07;
+	*T = ((float)(data->t)) / 256.0f;
+	*W = (((float)(data->w)) / 256.0f) * 2*PI;
+	*POS = (((float)(data->pos)) / 32768.0f) * 2*PI;
+	*TEMP = (int)(data->temp);
+	*ERROR = (int)(data->reserve >> 13) & 0x07;
+	*FOOFORCE = (int)(data->reserve >> 1) & 0xFFF;
+
     return true; // 返回解包是否成功
-}
-
-
-bool generate_crc16_cmd(struct MotorCmdGom *cmd){
-    // 使用crc_ccitt函数计算并设置cmd的crc16字段
-    unsigned char *data = (unsigned char *)cmd;
-    // 只计算除crc16字段外的所有字节
-    cmd->crc16 = crc_ccitt(0xFFFF, data, sizeof(struct MotorCmdGom) - sizeof(cmd->crc16));
-    return true; // 返回计算是否成功
 }
 
 

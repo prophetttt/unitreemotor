@@ -39,19 +39,31 @@ int main(){
         printf("MotorCmdGom 初始化失败！\n");
     }
 
-    // unsigned short depack_id;
-    // unsigned short depack_mode;
-    // float depack_T;
-    // float depack_W;
-    // float depack_POS;
-    // int depack_temp;
+    // 用memcpy将指定hex数据写入MotorDataGom结构体
+    uint8_t raw_data[] = {0xfd, 0xee, 0x01, 0x00, 0x00, 0x0a, 0x00, 0x05, 0x75, 0x00, 0x00, 0x17, 0x40, 0x02, 0x98, 0xd8};
+    memcpy(&data, raw_data, sizeof(data));
+
+    unsigned short depack_id;
+    unsigned short depack_mode;
+    float depack_T;
+    float depack_W;
+    float depack_POS;
+    int depack_temp;
+    int depack_error;
+    int depack_fooforce;
     
-    // if(depackMotoDataGom(&data, &depack_id, &depack_mode, &depack_T, &depack_W, &depack_POS, &depack_temp, 0, 0)){
-    //     printf("MotorDataGom 解包成功！\n");
-    //     print_struct_hex(&data, sizeof(data));
-    // } else {
-    //     printf("MotorDataGom 解包失败！\n");
-    // }
+    if(depackMotoDataGom(&data, &depack_id, &depack_mode, &depack_T, &depack_W, &depack_POS, &depack_temp, &depack_error, &depack_fooforce)){
+        printf("MotorDataGom 解包成功！\n");
+        printf("ID: %u\n", depack_id);
+        printf("MODE: %u\n", depack_mode);
+        printf("T: %.4f\n", depack_T);
+        printf("W: %.4f\n", depack_W);
+        printf("POS: %.4f\n", depack_POS);
+        printf("TEMP: %d\n", depack_temp);
+        
+    } else {
+        printf("MotorDataGom 解包失败！\n");
+    }
 
     return 0;
 

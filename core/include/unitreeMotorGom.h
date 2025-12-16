@@ -34,13 +34,12 @@ struct MotorDataGom
     uint16_t crc16;
 };
 #pragma pack(pop) 
-
+uint16_t crc_ccitt(uint16_t crc, uint8_t const *buffer, size_t len);
 bool generate_crc16_cmd(struct MotorCmdGom *cmd);
 bool verify_crc16_data(struct MotorDataGom *data);
 bool initMotoCmdGom(struct MotorCmdGom * cmd,const unsigned short *ID, const unsigned short *MODE, const float* T,const float* W,const float* POS,const float* K_P,const float* K_W);
-bool depackMotoDataGom(const struct MotorDataGom *, unsigned short*ID, unsigned short *MODE,  float* T, float* W, float* POS, int* TEMP, int ERROR, int FOOFORCE);
-static uint16_t crc_ccitt_byte(uint16_t crc, const uint8_t c);
-inline uint16_t crc_ccitt(uint16_t crc, uint8_t const *buffer, size_t len);
+bool depackMotoDataGom(const struct MotorDataGom *, unsigned short*ID, unsigned short *MODE,  float* T, float* W, float* POS, int* TEMP, int* ERROR, int* FOOFORCE);
+
 #ifdef __cplusplus
 }
 #endif
