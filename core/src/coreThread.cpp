@@ -27,6 +27,40 @@ CoreThread<T, R>::CoreThread(std::string serial_port, unsigned short freq, std::
 }
 
 template <typename T, typename R>
+CoreThread<T, R>::CoreThread(std::string serial_port, unsigned short freq, std::function<bool(T &, R &)> callback, std::unordered_map<int, MotorCmdGom> initial_cmds)
+{
+    this->fequency = freq;
+    this->cmd_callback = callback;
+    this->serial_port = serial_port;
+    this->motor_count = initial_cmds.size();
+    if (!initial_cmds.empty())
+    {
+        // 1. 获取指向第一个元素的迭代器
+        auto it = initial_cmds.begin();
+
+        for (const auto & it : initial_cmds)
+        {
+            // 2. 处理当前元素
+            unsigned short id = it.first;
+            T cmd = it.second;
+            cmd_id_map[id] = true;
+            current_cmd[id] = cmd;
+        }
+    }
+
+    std::cout << "CoreThread started on port: " << serial_port << " with frequency: " << freq << " Hz controlling " << motor_count << " motors." << std::endl;
+    fd_block = open(serial_port.c_str(), O_RDWR | O_NOCTTY);
+    if (fd_block == -1)
+    {
+        std::cerr << "Error opening serial port: " << std::strerror(errno) << std::endl;
+        thread_active = false;
+        return;
+    }
+    // configure_serial_termios(&tty, fd_block);
+    // serial_thread = std::thread(&CoreThread<T, R>::serialsendrecive, this);
+}
+
+template <typename T, typename R>
 void CoreThread<T, R>::serialsendrecive()
 {
     using clock = std::chrono::steady_clock;

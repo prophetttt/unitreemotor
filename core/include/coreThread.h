@@ -9,6 +9,8 @@
 #include <mutex>
 #include <chrono>
 #include <atomic>
+#include <unordered_map>
+#include "unitreeMotor.h"
 
 #define RUN_IN_THREAD
 
@@ -36,6 +38,7 @@ public:
     RUN_IN_THREAD void serialsendrecive();
     std::atomic<bool> thread_active = true;
     CoreThread(std::string serial_port, unsigned short freq, std::function<bool(T &, R &)> callback);
+    CoreThread(std::string serial_port, unsigned short freq, std::function<bool(T &, R &)> callback, std::unordered_map<int, MotorCmdGom> initial_cmds);
     ~CoreThread();
     bool setCmd(unsigned short id, T cmd);
     std::pair<std::pair<T, R>, std::chrono::time_point<std::chrono::system_clock>> getCmd();
