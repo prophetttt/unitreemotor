@@ -4,6 +4,10 @@
 #include "wx/frame.h"
 #include "DashboardPanel.h"
 #include "ConfigPanel.h"
+#include "serial_initalize.h"
+#include "coreThread.h"
+#include "unitreeMotor.h"
+
 
 
 
@@ -25,7 +29,6 @@ public:
 private:
     // 顶部控制区域
     void InitTopBar(wxSizer* parentSizer);
-
     // 中部数据区
     DashboardPanel* m_dashboardPanel;
     // 底部配置区

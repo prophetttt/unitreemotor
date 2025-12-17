@@ -4,6 +4,8 @@
 #include "wx/stattext.h"
 #include "wx/choice.h"
 #include <iostream>
+#include "serial_initalize.h"
+
 
 #include "DashboardPanel.h"
 #include "ConfigPanel.h"

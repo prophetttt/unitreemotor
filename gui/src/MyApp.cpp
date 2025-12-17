@@ -1,5 +1,6 @@
 #include "wx/app.h"
 #include "MainFrame.h"
+#include "serial_initalize.h"
 
 // ============================================================================
 // 定义应用程序类
