@@ -2,7 +2,7 @@
 #define COMMANDEVENT
 
 #include <wx/event.h>
-#include "../platform/linux/include/unitreeMotor/unitreeMotor.h"
+#include "unitreeMotor.h"
 
 class ControlEvent : public wxCommandEvent {
 public:

@@ -29,7 +29,7 @@ set(SOURCE_FILES
 add_executable(${PROJECT_NAME} WIN32 MACOSX_BUNDLE ${SOURCE_FILES})
 
 # 7. 链接 wxWidgets 库
-target_link_libraries(${PROJECT_NAME} ${wxWidgets_LIBRARIES})
+target_link_libraries(${PROJECT_NAME} ${wxWidgets_LIBRARIES} motor_lib)
 
 target_compile_options(${PROJECT_NAME} PRIVATE
     # 指定源文件（输入）编码为 UTF-8
