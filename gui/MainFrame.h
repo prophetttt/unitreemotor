@@ -31,7 +31,7 @@ private:
     // 底部配置区
     ConfigPanel* m_configPanel;
 
-    wxDECLARE_EVENT_TABLE();
+    
 };
 
 #endif // MAINFRAME_H
