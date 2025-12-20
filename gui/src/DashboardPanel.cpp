@@ -23,13 +23,13 @@ DashboardPanel::DashboardPanel(wxWindow* parent)
 void DashboardPanel::InitDataParsing(wxSizer* parentSizer)
 {
     wxPanel* panel = new wxPanel(this, wxID_ANY);
-    panel->SetBackgroundColour(BG_MID);
+    // panel->SetBackgroundColour(BG_MID);
 
     wxBoxSizer* panelSizer = new wxBoxSizer(wxVERTICAL);
 
     // 标题
     wxStaticText* title = new wxStaticText(panel, wxID_ANY, wxString::FromUTF8("● 数据解析"));
-    title->SetForegroundColour(TEXT_LIGHT);
+    // title->SetForegroundColour(TEXT_LIGHT);
     title->SetFont(title->GetFont().Bold());
     panelSizer->Add(title, 0, wxALL, 10);
 
@@ -38,9 +38,9 @@ void DashboardPanel::InitDataParsing(wxSizer* parentSizer)
 
     auto AddReadOnlyField = [&](const wxString& labelText, const wxString& valueText) {
         wxStaticText* label = new wxStaticText(panel, wxID_ANY, labelText);
-        label->SetForegroundColour(TEXT_LIGHT);
+        // label->SetForegroundColour(TEXT_LIGHT);
         wxStaticText* value = new wxStaticText(panel, wxID_ANY, valueText);
-        value->SetForegroundColour(ACCENT_BLUE); // 数据值用蓝色
+        // value->SetForegroundColour(ACCENT_BLUE); // 数据值用蓝色
         gridSizer->Add(label, 0, wxALIGN_LEFT | wxALIGN_CENTER_VERTICAL);
         gridSizer->Add(value, 0, wxALIGN_LEFT | wxALIGN_CENTER_VERTICAL);
     };
@@ -64,13 +64,13 @@ void DashboardPanel::InitDataParsing(wxSizer* parentSizer)
 void DashboardPanel::InitDebugInput(wxSizer* parentSizer)
 {
     wxPanel* panel = new wxPanel(this, wxID_ANY);
-    panel->SetBackgroundColour(BG_MID);
+    // panel->SetBackgroundColour(BG_MID);
     
     wxBoxSizer* panelSizer = new wxBoxSizer(wxVERTICAL);
 
     // 标题
     wxStaticText* title = new wxStaticText(panel, wxID_ANY, wxString::FromUTF8("● 调试数据输入"));
-    title->SetForegroundColour(TEXT_LIGHT);
+    // title->SetForegroundColour(TEXT_LIGHT);
     title->SetFont(title->GetFont().Bold());
     panelSizer->Add(title, 0, wxALL, 10);
 
@@ -79,12 +79,12 @@ void DashboardPanel::InitDebugInput(wxSizer* parentSizer)
 
     auto AddInputField = [&](const wxString& labelText, const wxString& placeholder) {
         wxStaticText* label = new wxStaticText(panel, wxID_ANY, labelText);
-        label->SetForegroundColour(TEXT_LIGHT);
+        // label->SetForegroundColour(TEXT_LIGHT);
         wxTextCtrl* input = new wxTextCtrl(panel, wxID_ANY, placeholder, wxDefaultPosition, wxSize(120, -1));
         
         // 尝试深色输入框样式
-        input->SetBackgroundColour(BG_DARK); 
-        input->SetForegroundColour(TEXT_LIGHT); 
+        // input->SetBackgroundColour(BG_DARK); 
+        // input->SetForegroundColour(TEXT_LIGHT); 
 
         gridSizer->Add(label, 0, wxALIGN_LEFT | wxALIGN_CENTER_VERTICAL);
         gridSizer->Add(input, 0, wxALIGN_LEFT | wxALIGN_CENTER_VERTICAL);

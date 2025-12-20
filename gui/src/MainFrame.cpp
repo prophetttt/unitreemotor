@@ -5,6 +5,7 @@
 #include "wx/choice.h"
 #include <iostream>
 #include "serial_initalize.h"
+#include "commandEvent.h"
 
 
 #include "DashboardPanel.h"
@@ -18,23 +19,23 @@ MainFrame::MainFrame(const wxString &title, const wxPoint &pos, const wxSize &si
     // SetBackgroundColour(BG_DARK);
 
     // 设置 Noto Sans CJK 字体以支持中文字符显示
-    wxFont defaultFont(12, wxFONTFAMILY_DEFAULT, wxFONTSTYLE_NORMAL, wxFONTWEIGHT_NORMAL, false, wxString::FromUTF8("Noto Sans CJK SC"));
-    if (!defaultFont.IsOk())
-    {
-        // 备选字体：尝试其他 Noto Sans CJK 变体
-        defaultFont = wxFont(12, wxFONTFAMILY_DEFAULT, wxFONTSTYLE_NORMAL, wxFONTWEIGHT_NORMAL, false, wxString::FromUTF8("Noto Sans CJK TC"));
-    }
-    if (!defaultFont.IsOk())
-    {
-        // 再次尝试通用名称
-        defaultFont = wxFont(12, wxFONTFAMILY_DEFAULT, wxFONTSTYLE_NORMAL, wxFONTWEIGHT_NORMAL, false, wxString::FromUTF8("Noto Sans CJK"));
-    }
-    if (!defaultFont.IsOk())
-    {
-        // 最后备选：使用系统默认的 CJK 字体
-        defaultFont = wxFont(12, wxFONTFAMILY_DEFAULT, wxFONTSTYLE_NORMAL, wxFONTWEIGHT_NORMAL);
-    }
-    SetFont(defaultFont);
+    // wxFont defaultFont(12, wxFONTFAMILY_DEFAULT, wxFONTSTYLE_NORMAL, wxFONTWEIGHT_NORMAL, false, wxString::FromUTF8("Noto Sans CJK SC"));
+    // if (!defaultFont.IsOk())
+    // {
+    //     // 备选字体：尝试其他 Noto Sans CJK 变体
+    //     defaultFont = wxFont(12, wxFONTFAMILY_DEFAULT, wxFONTSTYLE_NORMAL, wxFONTWEIGHT_NORMAL, false, wxString::FromUTF8("Noto Sans CJK TC"));
+    // }
+    // if (!defaultFont.IsOk())
+    // {
+    //     // 再次尝试通用名称
+    //     defaultFont = wxFont(12, wxFONTFAMILY_DEFAULT, wxFONTSTYLE_NORMAL, wxFONTWEIGHT_NORMAL, false, wxString::FromUTF8("Noto Sans CJK"));
+    // }
+    // if (!defaultFont.IsOk())
+    // {
+    //     // 最后备选：使用系统默认的 CJK 字体
+    //     defaultFont = wxFont(12, wxFONTFAMILY_DEFAULT, wxFONTSTYLE_NORMAL, wxFONTWEIGHT_NORMAL);
+    // }
+    // SetFont(defaultFont);
     std::cout << "Default font set: " << defaultFont.GetFaceName().ToStdString() << std::endl;
 
     // 2. 创建主 Sizer (垂直布局)
@@ -51,6 +52,9 @@ MainFrame::MainFrame(const wxString &title, const wxPoint &pos, const wxSize &si
     m_configPanel = new ConfigPanel(this);
     mainSizer->Add(m_configPanel, 0, wxEXPAND | wxLEFT | wxRIGHT | wxBOTTOM, 10);
 
+    /*************** Bind(frontend data to backend) *********************/
+    //this->Bind(MOTOR_DATA, &MyFrame::OnBackendUpdate, this);
+
     // 6. 应用 Sizer
     SetSizer(mainSizer);
     // Center(); // 窗口居中
@@ -59,7 +63,7 @@ MainFrame::MainFrame(const wxString &title, const wxPoint &pos, const wxSize &si
 void MainFrame::InitTopBar(wxSizer *parentSizer)
 {
     wxPanel *topBar = new wxPanel(this, wxID_ANY);
-    topBar->SetBackgroundColour(TEXT_LIGHT);
+    // topBar->SetBackgroundColour(TEXT_LIGHT);
     // 继承主窗口字体，确保字体可见
     topBar->SetFont(GetFont());
     wxBoxSizer *topSizer = new wxBoxSizer(wxHORIZONTAL);
@@ -78,7 +82,7 @@ void MainFrame::InitTopBar(wxSizer *parentSizer)
     auto CreateStatusLabel = [&](const wxString &text)
     {
         wxStaticText *label = new wxStaticText(topBar, wxID_ANY, text);
-        label->SetForegroundColour(TEXT_LIGHT);
+        // label->SetForegroundColour(TEXT_LIGHT);
         label->SetFont(GetFont());
         return label;
     };
@@ -97,7 +101,7 @@ void MainFrame::InitTopBar(wxSizer *parentSizer)
     // --- 右侧：开始按钮 ---
     wxButton *startButton = new wxButton(topBar, wxID_ANY, wxString::FromUTF8("开始调试"));
     // 尝试设置蓝色背景 (在某些系统上 wxButton 的颜色定制能力有限)
-    startButton->SetBackgroundColour(ACCENT_BLUE);
+    // startButton->SetBackgroundColour(ACCENT_BLUE);
     startButton->SetForegroundColour(*wxWHITE);
     startButton->SetMinSize(wxSize(100, -1));
     startButton->Bind(wxEVT_BUTTON, [=](wxCommandEvent &event)

@@ -15,18 +15,18 @@ ConfigPanel::ConfigPanel(wxWindow* parent)
 
     // 标题
     wxStaticText* title = new wxStaticText(this, wxID_ANY, wxString::FromUTF8("● 配置工具"));
-    title->SetForegroundColour(TEXT_LIGHT);
+    // title->SetForegroundColour(TEXT_LIGHT);
     title->SetFont(title->GetFont().Bold());
     mainSizer->Add(title, 0, wxALL, 10);
     
     // 按钮布局区域
     wxPanel* buttonPanel = new wxPanel(this, wxID_ANY);
-    buttonPanel->SetBackgroundColour(BG_MID);
+    // buttonPanel->SetBackgroundColour(BG_MID);
     wxFlexGridSizer* buttonSizer = new wxFlexGridSizer(5, 5, 5); // 5列，间距5
 
     auto CreateConfigButton = [&](const wxString& label) {
         wxButton* btn = new wxButton(buttonPanel, wxID_ANY, label);
-        btn->SetForegroundColour(ACCENT_BLUE); // 蓝色文字
+        // btn->SetForegroundColour(ACCENT_BLUE); // 蓝色文字
         // 很难在所有平台上强制实现“蓝色边框”的幽灵按钮效果，这里保持默认背景
         return btn;
     };
