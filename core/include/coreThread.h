@@ -18,10 +18,10 @@
 template <typename T, typename R>
 class CoreThread
 {
-public:
+private:
     int fd_block;
     // send/recive fequency in Hz
-    unsigned short fequency;
+    std::atomic<unsigned short> fequency;
     // map of command ID's
     std::string serial_port;
 
@@ -32,9 +32,14 @@ public:
     // how many motors are being controlled
     std::atomic<unsigned short> motor_count = 0;
     std::mutex queue_mutex;
+    // this queue's data is only used when recall function was not set
     std::queue<std::pair<std::pair<T, R>, std::chrono::time_point<std::chrono::system_clock>>> cmd_queue;
-    // this function's parameters is poped from queue
+    // this function's parameters is poped when data is recived
     std::function<bool(T &, R &)> cmd_callback;
+
+
+public:
+    
 
     RUN_IN_THREAD void serialsendrecive();
     std::atomic<bool> thread_active = true;
@@ -43,7 +48,7 @@ public:
     ~CoreThread();
     bool setCmd(unsigned short id, T cmd);
 
-    bool getCmd(
+    bool getData(
         std::pair<std::pair<T, R>, std::chrono::time_point<std::chrono::system_clock>> &result);
     std::thread serial_thread;
 };

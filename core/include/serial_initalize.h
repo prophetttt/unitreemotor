@@ -5,6 +5,6 @@
 #include <IOKit/serial/ioss.h>
 #endif
 
-void configure_serial_termios(struct termios *tty, int fd);
+void configure_serial_termios(int fd);
 
 #endif

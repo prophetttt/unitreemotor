@@ -20,7 +20,7 @@ add_executable(motorDataSturctTest
 test/dataGomTest.cpp)
 target_link_libraries(motorDataSturctTest PRIVATE motor_lib)
 
-add_executable(coreThread test/coreTest.cpp)
-target_link_libraries(coreThread PRIVATE motor_lib)
+add_executable(coreTest test/coreTest.cpp)
+target_link_libraries(coreTest PRIVATE motor_lib)
 
-add_test(NAME MotorCoreTest COMMAND run_tests)
+# add_test(NAME MotorCoreTest COMMAND run_tests)

@@ -3,10 +3,11 @@
 #include "wx/button.h"
 #include "wx/stattext.h"
 #include "wx/choice.h"
+#include "wx/menu.h"
+#include "wx/combobox.h"
 #include <iostream>
 #include "serial_initalize.h"
 #include "commandEvent.h"
-
 
 #include "DashboardPanel.h"
 #include "ConfigPanel.h"
@@ -36,11 +37,11 @@ MainFrame::MainFrame(const wxString &title, const wxPoint &pos, const wxSize &si
     //     defaultFont = wxFont(12, wxFONTFAMILY_DEFAULT, wxFONTSTYLE_NORMAL, wxFONTWEIGHT_NORMAL);
     // }
     // SetFont(defaultFont);
-    std::cout << "Default font set: " << defaultFont.GetFaceName().ToStdString() << std::endl;
+    // std::cout << "Default font set: " << defaultFont.GetFaceName().ToStdString() << std::endl;
 
     // 2. 创建主 Sizer (垂直布局)
     wxBoxSizer *mainSizer = new wxBoxSizer(wxVERTICAL);
-
+    InitMenuBar();
     // 3. 初始化顶部控制栏
     InitTopBar(mainSizer);
 
@@ -52,12 +53,45 @@ MainFrame::MainFrame(const wxString &title, const wxPoint &pos, const wxSize &si
     m_configPanel = new ConfigPanel(this);
     mainSizer->Add(m_configPanel, 0, wxEXPAND | wxLEFT | wxRIGHT | wxBOTTOM, 10);
 
+    mainSizer->Show(m_configPanel, false);
+
     /*************** Bind(frontend data to backend) *********************/
-    //this->Bind(MOTOR_DATA, &MyFrame::OnBackendUpdate, this);
+    // this->Bind(MOTOR_DATA, &MyFrame::OnBackendUpdate, this);
 
     // 6. 应用 Sizer
     SetSizer(mainSizer);
     // Center(); // 窗口居中
+}
+
+void MainFrame::InitMenuBar()
+{
+    // 菜单栏初始化代码 (如果需要)
+    wxMenuBar *menuBar = new wxMenuBar();
+
+    wxMenu *motorTypeMenu = new wxMenu();
+    motorTypeMenu->AppendRadioItem(2001, "GO-M8010-6", "选择 GO-M8010-6 电机类型");
+    // motorTypeMenu->AppendRadioItem(2002, "A1", "选择 A1 电机类型");
+
+
+    menuBar->Append(motorTypeMenu, "&Motor Type");
+
+    wxMenu* viewMenu = new wxMenu();
+        
+        // 使用 CheckItem，这样菜单上会有打钩状态
+        viewMenu->AppendCheckItem(ID_VIEW_DEBUG, "调试视图 (Debug)\tCtrl+D");
+        viewMenu->AppendCheckItem(ID_VIEW_CONFIG, "配置视图 (Config)\tCtrl+G");
+        
+        // 默认设置为选中状态
+        viewMenu->Check(ID_VIEW_DEBUG, true);
+        viewMenu->Check(ID_VIEW_CONFIG, true);
+
+        menuBar->Append(viewMenu, "&View");
+
+    // 5. 核心：将菜单栏安装到窗口上
+    SetMenuBar(menuBar);
+
+    // Bind(wxEVT_MENU, &MainFrame::OnToggleView, this, ID_VIEW_DEBUG);
+    //     Bind(wxEVT_MENU, &MainFrame::OnToggleView, this, ID_VIEW_CONFIG);
 }
 
 void MainFrame::InitTopBar(wxSizer *parentSizer)
@@ -68,15 +102,24 @@ void MainFrame::InitTopBar(wxSizer *parentSizer)
     topBar->SetFont(GetFont());
     wxBoxSizer *topSizer = new wxBoxSizer(wxHORIZONTAL);
 
-    // --- 左侧：下拉框 ---
-    wxArrayString motors, ports;
-    motors.Add(wxString::FromUTF8("GO-M8010-6"));
-    motors.Add(wxString::FromUTF8("M-100"));
-    ports.Add(wxString::FromUTF8("USB Serial Port (COM3)"));
-    ports.Add(wxString::FromUTF8("CAN Port"));
 
-    topSizer->Add(new wxChoice(topBar, wxID_ANY, wxDefaultPosition, wxDefaultSize, motors), 0, wxALL | wxALIGN_CENTER_VERTICAL, 5);
-    topSizer->Add(new wxChoice(topBar, wxID_ANY, wxDefaultPosition, wxDefaultSize, ports), 0, wxALL | wxALIGN_CENTER_VERTICAL, 5);
+
+    // 创建 ComboBox
+// 参数：父窗口, ID, 初始显示的文本, 位置, 大小, 预设选项数组, 样式
+wxSize boxSize(200, -1);
+wxComboBox* portBox = new wxComboBox(topBar, wxID_ANY, "/dev/cu.usbserial-FT53478H", wxDefaultPosition, boxSize);
+portBox->Bind(wxEVT_COMBOBOX, [=](wxCommandEvent& event) {
+    wxString selected = event.GetString();
+    // 处理选择逻辑...
+});
+
+portBox->Bind(wxEVT_TEXT, [=](wxCommandEvent& event) {
+    wxString input = event.GetString();
+    // 处理手动输入逻辑...
+});
+
+// 将其添加到 Sizer 中
+topSizer->Add(portBox, 0, wxALL | wxALIGN_CENTER_VERTICAL, 5);
 
     // --- 中间：状态显示 ---
     auto CreateStatusLabel = [&](const wxString &text)

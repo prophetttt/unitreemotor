@@ -5,11 +5,11 @@
 
 #define TARGET_BAUDRATE 4000000
 
-
-void configure_serial_termios(struct termios *tty, int fd)
+termios tty;
+void configure_serial_termios(int fd)
 {
     // 1. 获取当前设置
-    if (tcgetattr(fd, tty) != 0)
+    if (tcgetattr(fd, &tty) != 0)
     {
         std::cerr << "Error getting terminal attributes: " << std::strerror(errno) << std::endl;
         return;
@@ -23,51 +23,50 @@ void configure_serial_termios(struct termios *tty, int fd)
     // tty->c_cflag &= ~CBAUD;
     // 使用标准函数设置波特率，这在许多 Linux/POSIX 系统上是必要的。
     // 在 macOS 上，这对超高波特率可能会失败，但先进行设置。
-    cfsetispeed(tty, B38400); // 暂时设置为一个标准高波特率
-    cfsetospeed(tty, B38400); // 因为 CBAUD 可能不支持 4M
+    cfsetispeed(&tty, B38400); // 暂时设置为一个标准高波特率
+    cfsetospeed(&tty, B38400); // 因为 CBAUD 可能不支持 4M
 
     // 2. 数据位 (8 bit)
-    tty->c_cflag &= ~CSIZE;
-    tty->c_cflag |= CS8;
+    tty.c_cflag &= ~CSIZE;
+    tty.c_cflag |= CS8;
 
     // 3. 奇偶校验 (无奇偶校验位)
-    tty->c_cflag &= ~PARENB;
-    tty->c_cflag &= ~PARODD;
-
+    tty.c_cflag &= ~PARENB;
+    tty.c_cflag &= ~PARODD;
     // 4. 停止位 (1 bit)
-    tty->c_cflag &= ~CSTOPB;
+    tty.c_cflag &= ~CSTOPB;
 
     // 5. 其他重要标志：
-    tty->c_cflag |= (CLOCAL | CREAD);
+    tty.c_cflag |= (CLOCAL | CREAD);
     // std::cout << "Serial port configured: 8N1." << std::endl;
 
     // ---------------------------------------------
     // B. 本地模式标志 (c_lflag): 原始模式
     // ---------------------------------------------
-    tty->c_lflag &= ~(ICANON | ECHO | ECHOE | ISIG);
+    tty.c_lflag &= ~(ICANON | ECHO | ECHOE | ISIG);
 
     // ---------------------------------------------
     // C. 输入模式标志 (c_iflag): 原始模式
     // ---------------------------------------------
-    tty->c_iflag &= ~(IXON | IXOFF | IXANY);
-    tty->c_iflag &= ~(IGNBRK | BRKINT | PARMRK | ISTRIP | INLCR | IGNCR | ICRNL);
+    tty.c_iflag &= ~(IXON | IXOFF | IXANY);
+    tty.c_iflag &= ~(IGNBRK | BRKINT | PARMRK | ISTRIP | INLCR | IGNCR | ICRNL);
 
     // ---------------------------------------------
     // D. 输出模式标志 (c_oflag): 原始模式
     // ---------------------------------------------
-    tty->c_oflag &= ~OPOST;
+    tty.c_oflag &= ~OPOST;
 
     // ---------------------------------------------
     // E. 控制字符 (c_cc): 设置超时和最小读取字节数
     // ---------------------------------------------
     // 非阻塞模式下的最小读取字节数和超时设置：
-    tty->c_cc[VMIN] = 0;
-    tty->c_cc[VTIME] = 5; // 500 毫秒超时
+    tty.c_cc[VMIN] = 0;
+    tty.c_cc[VTIME] = 5; // 500 毫秒超时
 
     // ---------------------------------------------
     // F. 应用标准设置
     // ---------------------------------------------
-    if (tcsetattr(fd, TCSANOW, tty) != 0)
+    if (tcsetattr(fd, TCSANOW, &tty) != 0)
     {
         std::cerr << "Error setting standard terminal attributes: " << std::strerror(errno) << std::endl;
         return;

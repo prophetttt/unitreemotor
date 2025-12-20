@@ -1,12 +1,10 @@
 #include "coreThread.h"
 #include <iostream>
-#include <termios.h> // 包含 termios 结构体和函数
-#include <unistd.h>  // 包含 read, write, close
-#include <fcntl.h>   // 包含 open, O_RDWR, O_NOCTTY
+#include <unistd.h> // 包含 read, write, close
+#include <fcntl.h>  // 包含 open, O_RDWR, O_NOCTTY
 #include "unitreeMotor.h"
 #include "serial_initalize.h"
 
-termios tty;
 template <typename T, typename R>
 CoreThread<T, R>::CoreThread(std::string serial_port, unsigned short freq, std::function<bool(T &, R &)> callback)
 {
@@ -21,7 +19,7 @@ CoreThread<T, R>::CoreThread(std::string serial_port, unsigned short freq, std::
         thread_active = false;
         return;
     }
-    configure_serial_termios(&tty, fd_block);
+    configure_serial_termios(fd_block);
     serial_thread = std::thread(&CoreThread<T, R>::serialsendrecive, this);
 }
 
@@ -55,7 +53,7 @@ CoreThread<T, R>::CoreThread(std::string serial_port, unsigned short freq, std::
         thread_active = false;
         return;
     }
-    configure_serial_termios(&tty, fd_block);
+    configure_serial_termios(fd_block);
     serial_thread = std::thread(&CoreThread<T, R>::serialsendrecive, this);
 }
 
@@ -81,14 +79,29 @@ void CoreThread<T, R>::serialsendrecive()
                 }
                 cmd_pair.first = current_cmd[i];
             }
-            write(fd_block, &cmd_pair.first, sizeof(T));
-            read(fd_block, &cmd_pair.second, sizeof(R));
+            ssize_t bytes_written = write(fd_block, &cmd_pair.first, sizeof(T));
+            if (bytes_written < (ssize_t)sizeof(T))
+            {
+                std::cerr << "Error: Serial write failed for motor " << i
+                          << " (errno: " << errno << ")" << std::endl;
+                continue; // 写入失败，不尝试读取，直接处理下一个电机
+            }
+
+            ssize_t bytes_read = read(fd_block, &cmd_pair.second, sizeof(R));
+
+            // 如果读取字节数不完整，则视为失败，跳过回调
+            if (bytes_read < (ssize_t)sizeof(R))
+            {
+                // 这里可以选填一个调试打印，说明读取不完整
+                continue;
+            }
 
             if (!cmd_callback)
             {
                 std::lock_guard<std::mutex> lock(queue_mutex);
                 cmd_queue.push(std::make_pair(cmd_pair, std::chrono::system_clock::now()));
-                if(cmd_queue.size() > 1000){
+                if (cmd_queue.size() > 1000)
+                {
                     cmd_queue.pop();
                 }
             }
@@ -115,8 +128,8 @@ bool CoreThread<T, R>::setCmd(unsigned short id, T cmd)
 }
 
 template <typename T, typename R>
-bool CoreThread<T, R>::getCmd(
-    std::pair<std::pair<T, R>, std::chrono::time_point<std::chrono::system_clock>>& result)
+bool CoreThread<T, R>::getData(
+    std::pair<std::pair<T, R>, std::chrono::time_point<std::chrono::system_clock>> &result)
 {
     // 1. 回调函数冲突警告
     if (cmd_callback)
@@ -124,28 +137,26 @@ bool CoreThread<T, R>::getCmd(
         std::cerr << "Warning: getCmd called while cmd_callback is set. This may lead to unexpected behavior." << std::endl;
         // 即使有警告，我们仍然尝试从队列中获取数据（如果存在），但返回 false 以表示可能的数据流冲突。
         // 或者，更严格的做法是直接返回 false。这里选择返回 false。
-        return false; 
+        return false;
     }
-    
+
     // 2. 队列访问：加锁
     std::lock_guard<std::mutex> lock(queue_mutex);
-    
+
     // 3. 检查队列是否为空
     if (cmd_queue.empty())
     {
         // 队列为空，操作失败
         return false;
     }
-    
+
     // 4. 获取并移除队列头部数据
     result = cmd_queue.front();
     cmd_queue.pop();
-    
+
     // 5. 操作成功
     return true;
 }
-
-
 
 template <typename T, typename R>
 CoreThread<T, R>::~CoreThread()

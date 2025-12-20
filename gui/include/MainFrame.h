@@ -27,6 +27,7 @@ public:
     MainFrame(const wxString& title, const wxPoint& pos, const wxSize& size);
 
 private:
+    void InitMenuBar();
     // 顶部控制区域
     void InitTopBar(wxSizer* parentSizer);
     // 中部数据区
@@ -34,6 +35,29 @@ private:
     // 底部配置区
     ConfigPanel* m_configPanel;
 
+    //控件ID
+    enum {
+        ID_VIEW_DEBUG = 10001,
+        ID_VIEW_CONFIG
+    };
+
+    // void OnToggleView(wxCommandEvent& event) {
+    //     bool isChecked = event.IsChecked();
+        
+    //     if (event.GetId() == ID_VIEW_DEBUG) {
+    //         // 核心方法：Show(item, bool)
+    //         mainSizer->Show(m_dashboardPanel, isChecked);
+    //     } 
+    //     else if (event.GetId() == ID_VIEW_CONFIG) {
+    //         mainSizer->Show(m_configPanel, isChecked);
+    //     }
+
+    //     // 必须调用 Layout()，否则界面不会实时刷新
+    //     this->Layout();
+    // }
+
+    // 后台线程
+    // motorBackend* backendThread;
     
 };
 
