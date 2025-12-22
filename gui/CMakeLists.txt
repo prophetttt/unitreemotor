@@ -10,7 +10,6 @@ include(${wxWidgets_USE_FILE})
 set(SOURCE_FILES
     src/MyApp.cpp
     src/MainFrame.cpp
-    src/DashboardPanel.cpp
     src/ConfigPanel.cpp
 )
 
