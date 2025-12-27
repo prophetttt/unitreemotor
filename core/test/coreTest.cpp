@@ -60,7 +60,7 @@ int main(int argc, char **argv)
     }
     MotorCmdGom cmd;
     unsigned short id = 1;
-    unsigned short mode = 0;
+    unsigned short mode = 1;
     float T = 0.0f;
     float W = 0.0f;
     float POS = 0.0f;

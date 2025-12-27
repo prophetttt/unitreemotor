@@ -10,7 +10,8 @@ include(${wxWidgets_USE_FILE})
 set(SOURCE_FILES
     src/MyApp.cpp
     src/MainFrame.cpp
-    src/ConfigPanel.cpp
+
+    src/motorBackend.cpp
 )
 
 add_executable(${PROJECT_NAME} WIN32 MACOSX_BUNDLE ${SOURCE_FILES})
