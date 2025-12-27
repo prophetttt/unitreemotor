@@ -74,7 +74,7 @@ void MainFrame::InitTopBar(wxSizer *parentSizer) {
   startConfigButton =
       new wxToggleButton(topBar, wxID_ANY, wxString::FromUTF8("开始配置"));
 
-  topBar->SetFont(GetFont());
+//  topBar->SetFont(GetFont());
   //  topBar->SetBackgroundColour(wxColour(30, 30, 35));
 
   portBox->Bind(wxEVT_COMBOBOX, [=](wxCommandEvent &event) {

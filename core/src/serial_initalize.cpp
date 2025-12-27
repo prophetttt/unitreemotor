@@ -93,9 +93,9 @@ void configure_serial_termios(int fd) {
 // 对于非 macOS 系统，尝试使用 cfsetispeed/cfsetospeed 的高波特率宏（例如
 // B4000000），如果它存在
 #ifdef B4000000
-  cfsetispeed(tty, B4000000);
-  cfsetospeed(tty, B4000000);
-  if (tcsetattr(fd, TCSANOW, tty) != 0) {
+  cfsetispeed(&tty, B4000000);
+  cfsetospeed(&tty, B4000000);
+  if (tcsetattr(fd, TCSANOW, &tty) != 0) {
     std::cerr << "Error setting B4000000 terminal attributes: "
               << std::strerror(errno) << std::endl;
   } else {
