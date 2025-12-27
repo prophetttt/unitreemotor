@@ -27,6 +27,7 @@ public:
       return false;
     }
     delete m_coreThread;
+    m_handler->DeletePendingEvents();
     return true;
   }
   bool setDebugSerialCmd(const unsigned short &ID, const unsigned short &MODE,

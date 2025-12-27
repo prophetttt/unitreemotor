@@ -14,6 +14,7 @@
 #include "motorBackend.h"
 #include "wx/combobox.h"
 
+#define CALLBACK
 
 
 class MainFrame : public wxFrame
@@ -35,8 +36,9 @@ private:
 
   /*************** Bind(backend data to frontend) *********************/
     // 数据显示与输入控件映射
-    void UpdateDataDisplay(InformationEvent& event);
 
+    CALLBACK void UpdateDataDisplay(InformationEvent& event);
+    void UpdateDataDisplayNone();
 
     std::map<wxString, wxStaticText*> m_dataDisplays;
     std::map<wxString, wxTextCtrl*> m_dataInputs;

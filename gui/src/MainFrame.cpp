@@ -74,7 +74,7 @@ void MainFrame::InitTopBar(wxSizer *parentSizer) {
   startConfigButton =
       new wxToggleButton(topBar, wxID_ANY, wxString::FromUTF8("开始配置"));
 
-//  topBar->SetFont(GetFont());
+  //  topBar->SetFont(GetFont());
   //  topBar->SetBackgroundColour(wxColour(30, 30, 35));
 
   portBox->Bind(wxEVT_COMBOBOX, [=](wxCommandEvent &event) {
@@ -119,9 +119,12 @@ void MainFrame::InitTopBar(wxSizer *parentSizer) {
     } else {
       /**************************button up***********************/
       // GetValue() 为 false 表示按钮弹回来了
-      if (!startConfigButton->GetValue())
+      if (!startConfigButton->GetValue()) {
         sendDebugButton->Enable(false);
-      backendThread.destoryDebugSerial();
+
+        backendThread.destoryDebugSerial();
+        UpdateDataDisplayNone();
+      }
     }
   });
 
@@ -364,7 +367,7 @@ void MainFrame::UpdateDataDisplay(InformationEvent &event) {
   int GetFooForce = event.GetFooForce();
   int ID = event.GetMotorID();
   int Mode = event.GetMode();
-  wxLogDebug("内部变量 ERROR %d", Error);
+  //  wxLogDebug("内部变量 ERROR %d", Error);
 
   wxStaticText *valueid = m_dataDisplays["motor_id"];
   wxStaticText *valuepos = m_dataDisplays["pos"];
@@ -381,5 +384,21 @@ void MainFrame::UpdateDataDisplay(InformationEvent &event) {
   valuemode->SetLabel(wxString::Format("%d", Mode));
   valueerror->SetLabel(wxString::Format("%d", Error));
   valuevelocity->SetLabel(wxString::Format("%.3f", W));
-  this->Layout();
+}
+void MainFrame::UpdateDataDisplayNone() {
+  wxStaticText *valueid = m_dataDisplays["motor_id"];
+  wxStaticText *valuepos = m_dataDisplays["pos"];
+  wxStaticText *valuemode = m_dataDisplays["mode"];
+  wxStaticText *valuetemp = m_dataDisplays["temp"];
+  wxStaticText *valuetorque = m_dataDisplays["torque"];
+  wxStaticText *valueerror = m_dataDisplays["error"];
+  wxStaticText *valuevelocity = m_dataDisplays["velocity"];
+
+  valuetorque->SetLabel(wxString::Format("---"));
+  valuetemp->SetLabel(wxString::Format("---"));
+  valueid->SetLabel(wxString::Format("---"));
+  valuepos->SetLabel(wxString::Format("---"));
+  valuemode->SetLabel(wxString::Format("---"));
+  valueerror->SetLabel(wxString::Format("---"));
+  valuevelocity->SetLabel(wxString::Format("---"));
 }
