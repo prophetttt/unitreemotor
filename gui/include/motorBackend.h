@@ -7,10 +7,13 @@
 #include <string>
 
 
-
 // Custom event for backend to frontend communication
 class MotorBackend {
 public:
+// static bool checkID();
+// static bool openAutoBoot();
+// static bool setID();
+
   MotorBackend(wxEvtHandler *handler) : m_handler(handler) {}
   void setSerialportname(std::string serialport) { serial_name = serialport; }
   bool initializeDebugSerial(unsigned short freq) {
