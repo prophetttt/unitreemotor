@@ -9,7 +9,7 @@ termios tty;
 void configure_serial_termios(int fd) {
   // 1. 获取当前设置
   if (tcgetattr(fd, &tty) != 0) {
-    std::cerr << "Error getting terminal attributes: " << std::strerror(errno)
+    std::cerr << "Error getting terminal attributes: " 
               << std::endl;
     return;
   }
@@ -67,7 +67,7 @@ void configure_serial_termios(int fd) {
   // ---------------------------------------------
   if (tcsetattr(fd, TCSANOW, &tty) != 0) {
     std::cerr << "Error setting standard terminal attributes: "
-              << std::strerror(errno) << std::endl;
+             << std::endl;
     return;
   }
 
@@ -97,7 +97,7 @@ void configure_serial_termios(int fd) {
   cfsetospeed(&tty, B4000000);
   if (tcsetattr(fd, TCSANOW, &tty) != 0) {
     std::cerr << "Error setting B4000000 terminal attributes: "
-              << std::strerror(errno) << std::endl;
+             << std::endl;
   } else {
     std::cout << "Serial port configured successfully (attempted B4000000 on "
                  "non-Apple system)."

@@ -2,7 +2,7 @@
 #define MAINFRAME_H
 
 #include "wx/frame.h"
-
+#include <wx/button.h>
 #include "serial_initalize.h"
 #include "coreThread.h"
 #include "unitreeMotor.h"

@@ -284,7 +284,7 @@ void MainFrame::InitDebugPanel(wxSizer *parentSizer) {
     };
   });
 
-  rightPanelSizer->Add(sendDebugButton, 0, wxALL | wxALIGN_CENTER_VERTICAL, 5);
+  rightPanelSizer->Add(sendDebugButton, 0, wxALL , 5);
 
   rightPanel->SetSizer(rightPanelSizer);
 

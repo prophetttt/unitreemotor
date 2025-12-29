@@ -1,6 +1,7 @@
 #include "unitreeMotorGom.h"
 #include <cstdio>
 #include <iostream>
+#include <cstring>
 
 struct MotorCmdGom cmd;
 struct MotorDataGom data;

@@ -16,7 +16,7 @@ CoreThread<T, R>::CoreThread(std::string serial_port, unsigned short freq,
             << " motors." << std::endl;
   fd_block = open(serial_port.c_str(), O_RDWR | O_NOCTTY);
   if (fd_block == -1) {
-    std::cerr << "Error opening serial port: " << std::strerror(errno)
+    std::cerr << "Error opening serial port: " 
               << std::endl;
     thread_active = false;
     return;
@@ -52,7 +52,7 @@ CoreThread<T, R>::CoreThread(
             << " motors." << std::endl;
   fd_block = open(serial_port.c_str(), O_RDWR | O_NOCTTY);
   if (fd_block == -1) {
-    std::cerr << "Error opening serial port: " << std::strerror(errno)
+    std::cerr << "Error opening serial port: " 
               << std::endl;
     thread_active = false;
     return;
@@ -83,7 +83,7 @@ template <typename T, typename R> void CoreThread<T, R>::serialsendrecive() {
       ssize_t bytes_written = write(fd_block, &cmd_pair.first, sizeof(T));
       if (bytes_written < (ssize_t)sizeof(T)) {
         std::cerr << "Error: Serial write failed for motor " << i
-                  << " (errno: " << errno << ")" << std::endl;
+                  << std::endl;
         continue; // 写入失败，不尝试读取，直接处理下一个电机
       }
 
