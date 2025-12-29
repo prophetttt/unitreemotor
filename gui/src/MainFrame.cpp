@@ -92,7 +92,7 @@ void MainFrame::InitTopBar(wxSizer *parentSizer) {
 
   topSizer->AddStretchSpacer(1); // 弹性空间
 
-  startDebugButton->SetForegroundColour(*wxWHITE);
+  // startDebugButton->SetForegroundColour(*wxWHITE);
   startDebugButton->SetMinSize(wxSize(100, -1));
   startDebugButton->Bind(wxEVT_TOGGLEBUTTON, [this](wxCommandEvent &event) {
     if (startDebugButton->GetValue()) {
@@ -128,7 +128,7 @@ void MainFrame::InitTopBar(wxSizer *parentSizer) {
     }
   });
 
-  startConfigButton->SetForegroundColour(*wxWHITE);
+  // startConfigButton->SetForegroundColour(*wxWHITE);
   startConfigButton->SetMinSize(wxSize(100, -1));
   startConfigButton->Bind(wxEVT_TOGGLEBUTTON, [this](wxCommandEvent &event) {
     if (startConfigButton->GetValue()) {
@@ -251,7 +251,7 @@ void MainFrame::InitDebugPanel(wxSizer *parentSizer) {
   rightPanelSizer->AddStretchSpacer(1);
   sendDebugButton =
       new wxButton(rightPanel, wxID_ANY, wxString::FromUTF8("发送数据"));
-  sendDebugButton->SetForegroundColour(*wxWHITE);
+  // sendDebugButton->SetForegroundColour(*wxWHITE);
   sendDebugButton->SetMinSize(wxSize(100, -1));
   sendDebugButton->Enable(false);
 
@@ -377,13 +377,13 @@ void MainFrame::UpdateDataDisplay(InformationEvent &event) {
   wxStaticText *valueerror = m_dataDisplays["error"];
   wxStaticText *valuevelocity = m_dataDisplays["velocity"];
 
-  valuetorque->SetLabel(wxString::Format("%.2f N·m", T));
-  valuetemp->SetLabel(wxString::Format("%d °C", Temp));
-  valueid->SetLabel(wxString::Format("%d", ID));
-  valuepos->SetLabel(wxString::Format("%.3f", Pos));
-  valuemode->SetLabel(wxString::Format("%d", Mode));
-  valueerror->SetLabel(wxString::Format("%d", Error));
-  valuevelocity->SetLabel(wxString::Format("%.3f", W));
+  valuetorque->SetLabel(wxString::Format(wxT("%.2f N·m"), T));
+  valuetemp->SetLabel(wxString::Format(wxT("%d °C"), Temp));
+  valueid->SetLabel(wxString::Format(wxT("%d"), ID));
+  valuepos->SetLabel(wxString::Format(wxT("%.3f"), Pos));
+  valuemode->SetLabel(wxString::Format(wxT("%d"), Mode));
+  valueerror->SetLabel(wxString::Format(wxT("%d"), Error));
+  valuevelocity->SetLabel(wxString::Format(wxT("%.3f"), W));
 }
 void MainFrame::UpdateDataDisplayNone() {
   wxStaticText *valueid = m_dataDisplays["motor_id"];
