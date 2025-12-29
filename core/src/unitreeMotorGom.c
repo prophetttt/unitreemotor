@@ -115,7 +115,7 @@ bool depackMotoDataGom(const struct MotorDataGom *data, unsigned short *ID,
     return false; // 数据头错误，返回解包失败
   }
   *MODE = (data->mod >> 4) & 0x0F;
-  *ID = (data->mod >> 1) & 0x07;
+  *ID = (data->mod) & 0x07;
   *T = ((data->t)) / 256.0f;
   *W = (((data->w)) / 256.0f) * 2 * PI;
   *POS = (((data->pos)) / 32768.0f) * 2 * PI;

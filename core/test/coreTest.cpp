@@ -75,11 +75,11 @@ int main(int argc, char **argv)
         {id, cmd}};
     if (std::string(argv[1]) == "syic")
     {
-        coreThread = new CoreThread<MotorCmdGom, MotorDataGom>("/dev/cu.usbserial-FT53478H", 1000, nullptr, initial_cmds);
+        coreThread = new CoreThread<MotorCmdGom, MotorDataGom>("/dev/ttyUSB0", 1000, nullptr, initial_cmds);
     }
     if(std::string(argv[1]) == "asyic")
     {
-        coreThread = new CoreThread<MotorCmdGom, MotorDataGom>("/dev/cu.usbserial-FT53478H", 1000, callbackfunc, initial_cmds);
+        coreThread = new CoreThread<MotorCmdGom, MotorDataGom>("/dev/ttyUSB0", 1000, callbackfunc, initial_cmds);
     }
     int i = 0;
     // getchar();
@@ -97,8 +97,10 @@ int main(int argc, char **argv)
 
                 auto data = a.first.second;
                 print_struct_hex(&data, sizeof(MotorDataGom));
-                depackMotoDataGom(&data, &id, &mode, &T, &W, &POS, &error, &temp, &fooforce);
+                depackMotoDataGom(&data, &id, &mode, &T, &W, &POS, &temp, &error, &fooforce);
+               
                 std::cout << "Motor ID: " << id << ", MODE: " << mode << ", T: " << T << ", W: " << W << ", POS: " << POS << ", TEMP: " << temp << std::endl;
+                std::cout << error << fooforce << std::endl;
             }
             else
             {

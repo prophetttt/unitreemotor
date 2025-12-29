@@ -27,7 +27,7 @@ public:
       return false;
     }
     delete m_coreThread;
-    m_handler->DeletePendingEvents();
+    // m_handler->DeletePendingEvents();
     return true;
   }
   bool setDebugSerialCmd(const unsigned short &ID, const unsigned short &MODE,
@@ -67,6 +67,7 @@ private:
                         &FOOFORCE);
       // 创建自定义事件对象（使用之前定义的 MyCustomEvent）
       // 注意：QueueEvent 会接管事件对象的指针，它会自动处理 delete
+      std::cout << TEMP << std::endl;
       InformationEvent *event = new InformationEvent(
           EVT_MOTOR_INFO, wxID_ANY, ID, MODE, T, W, TEMP, POS, ERROR, FOOFORCE);
 
